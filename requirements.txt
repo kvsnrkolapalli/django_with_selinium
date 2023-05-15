@@ -1,0 +1,5 @@
+django
+selenium
+pandas
+bs4
+webdriver_manager
