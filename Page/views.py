@@ -11,50 +11,107 @@ from pandas import DataFrame
 from datetime import date 
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 import pandas as pd
 import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def UI(request):
     if request.method == 'POST':
         try:    
             BFM = date.today() + relativedelta(months=-5)
-            options = webdriver.ChromeOptions()
-            options.add_argument('--headless')
+            options = Options()
+            
             options.add_argument('window-size=1920x1080')
-            options.add_argument('--disable-dev-shm-usage')
             # chromedriver_path = 'C:/Users/Henry/Downloads/chromedriver_win32/chromedriver.exe'
             driver=webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+            # driver=webdriver.Chrome()
+            
             # driver = webdriver.Chrome(executable_path=chromedriver_path, options=Chrome_options)
             driver.maximize_window()
-            driver.get('https://www.sec.gov/edgar/search/')
-            time.sleep(2)
-            driver.find_element(By.ID, 'entity-short-form').send_keys('Greenlight Capital')
-            time.sleep(2)
-            driver.find_element(By.ID, 'search').click()
-            time.sleep(2)
+            
+            driver.get('https://www.sec.gov/edgar/search/#/q=13F&dateRange=custom&entityName=Greenlight%2520Capital&startdt=2022-12-15&enddt=2023-05-15')
+            
+            # driver.find_element(By.ID, 'entity-short-form').send_keys('Greenlight Capital')
+            try:
+                driver.find_element(By.ID, 'show-full-search-form').click()
+                time.sleep(2)
+            except:
+                pass
+            
+
+            # Close the WebDriver
+            # driver.quit()
+            # while(1):
+            #     driver.get_screenshot_as_file("screenshot"+str(a)+".png")
+            #     try:
+            #         driver.find_element(By.ID, 'keywords').clear()
+            #         break
+            #     except:
+                    
+            #         try:
+            #             driver.find_element(By.ID, 'entity-short-form').send_keys('Greenlight Capital')
+            
+            #             time.sleep(2)
+            #             driver.find_element(By.ID, 'search').click()
+            #         except:
+            #             pass
+                    
             driver.find_element(By.ID, 'keywords').clear()
             driver.find_element(By.ID, 'keywords').send_keys('13F')
-            time.sleep(1)
+            # time.sleep(1)
+            driver.find_element(By.ID, 'entity-full-form').clear()
             driver.find_element(By.ID, 'entity-full-form').send_keys('Greenlight Capital')
-            time.sleep(1)
+            # time.sleep(1)
             select = Select(driver.find_element(By.ID,'date-range-select'))
             select.select_by_value('custom')
-            time.sleep(1)
+            # time.sleep(1)
             driver.find_element(By.ID, 'date-from').click()
-            time.sleep(1)
+            # time.sleep(1)
             select = Select(driver.find_element(By.CLASS_NAME,'ui-datepicker-month'))
             select.select_by_value(str(int(str(BFM).split('-')[1])-1))    
-            time.sleep(1)
+            # time.sleep(1)
             select = Select(driver.find_element(By.CLASS_NAME,'ui-datepicker-year'))
             select.select_by_value(str(BFM).split('-')[0]) 
-            time.sleep(1)
+            # time.sleep(1)
+            driver.get_screenshot_as_file("screenshot1.png")
             for d in driver.find_elements(By.CLASS_NAME, 'ui-state-default'):
                 if d.text == str(int(str(BFM).split('-')[2])):
                     d.click()
-                    break    
-            time.sleep(1)
+                    break   
+            driver.find_element(By.ID, 'search').click()
+            time.sleep(3)
+            driver.get_screenshot_as_file("screenshot2.png")
+            # url=driver.current_url
+            # print(url)
             driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
             time.sleep(1)
+            # Get the HTML source
+            html_source = driver.page_source
+
+            # Save the HTML source to a file
+            with open("page_source1.html", "w", encoding="utf-8") as file:
+                file.write(html_source)
+            # Execute JavaScript code
+            script = """
+            var searchDiv = document.getElementById("results");
+            searchDiv.style.display = "block";
+            var elements = searchDiv.getElementsByTagName("*");
+
+            for (var i = 0; i < elements.length; i++) {
+            elements[i].style.display = "block";
+            }
+            """
+            driver.execute_script(script)
+            driver.get_screenshot_as_file("screenshot3.png")
+            
+            # Get the HTML source
+            html_source = driver.page_source
+
+            # Save the HTML source to a file
+            with open("page_source2.html", "w", encoding="utf-8") as file:
+                file.write(html_source)
             if len(driver.find_elements(By.CLASS_NAME, 'preview-file')) > 0:
                 IFF = []
                 IRF = []
