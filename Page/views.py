@@ -20,7 +20,6 @@ def UI(request):
             BFM = date.today() + relativedelta(months=-5)
             options = webdriver.ChromeOptions()
             options.add_argument('--headless')
-            options.add_argument('--no-sandbox')
             options.add_argument('window-size=1920x1080')
             options.add_argument('--disable-dev-shm-usage')
             # chromedriver_path = 'C:/Users/Henry/Downloads/chromedriver_win32/chromedriver.exe'
