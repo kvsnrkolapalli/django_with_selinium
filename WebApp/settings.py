@@ -118,4 +118,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, "sattic/")
-ALLOWED_HOSTS = ['0.0.0.0','54.227.233.207']
+ALLOWED_HOSTS = ['0.0.0.0','3.86.231.149']
