@@ -80,13 +80,6 @@ def UI(request):
             self.browser.find_element(By.ID, 'date-from').send_keys(Keys.ENTER)
             self.click_button(by=By.ID,value='search')
             time.sleep(2)
-            # Get the HTML source
-            html_source = self.browser.page_source
-
-            # Save the HTML source to a file
-            with open("page_source1.html", "w", encoding="utf-8") as file:
-                file.write(html_source)
-            self.browser.get_screenshot_as_file("screenshot2.png")
             if len(driver.find_elements(By.CLASS_NAME, 'preview-file')) > 0:
                 IFF = []
                 IRF = []
